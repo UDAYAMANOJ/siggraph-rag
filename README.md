@@ -2,6 +2,16 @@
 
 A full-stack Retrieval-Augmented Generation (RAG) application for searching and querying SIGGRAPH 2025 research papers. This project combines a Next.js frontend with a FastAPI backend to provide an intelligent search interface powered by AI.
 
+## 🚀 Live Deployment
+
+| Service | URL |
+|---------|-----|
+| **Frontend (Vercel)** | https://siggraph-czlc0bwja-udayamanojs-projects.vercel.app/ |
+| **Backend (Render)** | https://siggraph-rag-qkdt.onrender.com |
+| **API Health Check** | https://siggraph-rag-qkdt.onrender.com/health |
+| **API Docs** | https://siggraph-rag-qkdt.onrender.com/docs |
+| **GitHub Repo** | https://github.com/UDAYAMANOJ/siggraph-rag |
+
 ## 🎯 Project Overview
 
 Build a production-ready RAG application that allows users to:
@@ -14,19 +24,19 @@ Build a production-ready RAG application that allows users to:
 
 This is a **full-stack application** with separate frontend and backend:
 
--   **Frontend**: Next.js app running on `http://localhost:3000`
+-   **Frontend**: Next.js app — [Live on Vercel](https://siggraph-czlc0bwja-udayamanojs-projects.vercel.app/) / Local: `http://localhost:3000`
     - Modern React UI with Tailwind CSS
     - Real-time streaming via Server-Sent Events (SSE)
     - Responsive design with progress indicators
 
--   **Backend**: FastAPI server running on `http://localhost:8082`
+-   **Backend**: FastAPI server — [Live on Render](https://siggraph-rag-qkdt.onrender.com) / Local: `http://localhost:8082`
     - RESTful API with SSE streaming support
     - Hybrid search (semantic + keyword)
     - AI-powered answer generation with citations
 
 The frontend communicates with the backend via HTTP API calls.
 
-## Dataset 
+## Dataset
 Chunked dataset in json form: https://drive.google.com/drive/folders/1-NaRLrjlMMW56ATTwXB5FYV84EjTOALT
 
 ## Prerequisites
@@ -506,12 +516,10 @@ In the Render dashboard, add these environment variables:
 
 ```
 OPENROUTER_API_KEY=sk-or-v1-...
-QDRANT_URL=https://your-cluster.qdrant.io
-QDRANT_API_KEY=your-qdrant-key
+QDRANT_URL=https://27fbf31a-e716-4bb7-b37c-1844fc21212e.eu-west-2-0.aws.cloud.qdrant.io:6333
+QDRANT_API_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIiwic3ViamVjdCI6ImFwaS1rZXk6NmRkNDNlYjktNWQwZS00MmI0LThlNDktNjU3MGUwYmY4ZTQxIn0.ahoNr4TRjy2VtcsZWUH-L87c0yaf1T9xSn_g53tQKtw
 EMBEDDING_MODEL=baai/bge-large-en-v1.5
-LLM_MODEL=gpt-4-turbo-preview
-RERANKER_TYPE=cohere
-COHERE_API_KEY=your-cohere-key
+LLM_MODEL=openai/gpt-4o
 ```
 
 **Memory Optimization Tips**:
@@ -522,13 +530,13 @@ COHERE_API_KEY=your-cohere-key
 
 1. Click **"Create Web Service"**
 2. Wait 5-10 minutes for deployment
-3. Your backend will be live at: `https://siggraph-rag-backend.onrender.com`
+3. Your backend will be live at: `https://siggraph-rag-qkdt.onrender.com`
 
 #### d. Verify Deployment
 
 Test your backend:
 ```bash
-curl https://siggraph-rag-backend.onrender.com/health
+curl https://siggraph-rag-qkdt.onrender.com/health
 ```
 
 Expected response:
@@ -559,7 +567,7 @@ cd frontend
 Create `.env.production` file:
 
 ```bash
-NEXT_PUBLIC_API_URL=https://siggraph-rag-backend.onrender.com
+NEXT_PUBLIC_API_URL=https://siggraph-rag-qkdt.onrender.com
 ```
 
 #### d. Deploy to Vercel
@@ -586,13 +594,13 @@ Follow the prompts
    vercel --prod
    ```
 
-Your frontend will be live at: `https://siggraph-rag.vercel.app`
+Your frontend will be live at: `https://siggraph-czlc0bwja-udayamanojs-projects.vercel.app/`
 
 ---
 
 ### Step 5: Test Full-Stack Deployment
 
-1. **Open your frontend URL** in a browser
+1. **Open your frontend URL** in a browser: https://siggraph-czlc0bwja-udayamanojs-projects.vercel.app/
 2. **Submit a test query**: "What is 3D Gaussian Splatting?"
 3. **Verify**:
    - ✅ Connection established
