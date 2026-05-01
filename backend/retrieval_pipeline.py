@@ -149,15 +149,20 @@ class RetrievalPipeline:
         print("Initializing embedder...")
         self.embedder = OpenRouterEmbedder(config.openrouter_api_key, config.embedding_model)
 
-        print(f"Loading chunks from {config.chunks_path}...")
-        with open(config.chunks_path, encoding="utf-8") as f:
-            data = json.load(f)
-        self.chunks = data["chunks"]
-        print(f"Loaded {len(self.chunks):,} chunks")
-
-        print("Building BM25 index...")
-        self.bm25_index = BM25Index(self.chunks)
-        print("BM25 index built")
+        # BM25 is optional — if chunks.json is missing, fall back to semantic-only search
+        if os.path.exists(config.chunks_path):
+            print(f"Loading chunks from {config.chunks_path}...")
+            with open(config.chunks_path, encoding="utf-8") as f:
+                data = json.load(f)
+            self.chunks = data["chunks"]
+            print(f"Loaded {len(self.chunks):,} chunks")
+            print("Building BM25 index...")
+            self.bm25_index = BM25Index(self.chunks)
+            print("BM25 index built")
+        else:
+            print(f"chunks.json not found at {config.chunks_path} — BM25 disabled, using semantic search only")
+            self.chunks = []
+            self.bm25_index = None
 
         self.config = config
 
@@ -179,6 +184,8 @@ class RetrievalPipeline:
         ]
 
     def bm25_search(self, query: str, top_k: int = 30) -> list[dict]:
+        if self.bm25_index is None:
+            return []
         results = self.bm25_index.search(query, top_k)
         return [
             {
@@ -192,6 +199,12 @@ class RetrievalPipeline:
     def hybrid_search(self, query: str, semantic_top_k: int = 30, bm25_top_k: int = 30) -> list[dict]:
         semantic_results = self.semantic_search(query, semantic_top_k)
         bm25_results = self.bm25_search(query, bm25_top_k)
+
+        # If BM25 unavailable, return semantic results directly with combined_score
+        if not bm25_results:
+            for r in semantic_results:
+                r["combined_score"] = r["score"]
+            return sorted(semantic_results, key=lambda x: x["combined_score"], reverse=True)
 
         if semantic_results:
             max_semantic = max(r["score"] for r in semantic_results)
